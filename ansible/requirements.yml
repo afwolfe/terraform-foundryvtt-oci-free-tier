@@ -1,0 +1,10 @@
+---
+collections:
+  - name: ansible.posix
+roles:
+  - name: geerlingguy.certbot
+  - name: geerlingguy.docker
+  - name: hifis.unattended_upgrades
+    version: "v3.2.1"
+  - name: nickjj.swapfile
+  - name: rofrantz.duckdns

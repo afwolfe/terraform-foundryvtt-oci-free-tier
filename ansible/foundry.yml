@@ -1,0 +1,40 @@
+- name: Upload foundry
+  hosts: oci-instances
+  tasks:
+    - name: Upload foundry directory
+      ansible.posix.synchronize:
+        src: ../foundry
+        dest: ~/foundry
+        delete: no # Don't delete the folder or else this may wipe out the data folder
+    - name: Render Foundry docker-compose.yml
+      template:
+        src: templates/docker-compose.yml.j2
+        dest: ./foundry/docker-compose.yml
+    - name: Create nginx conf folder if it does not exist
+      file:
+        path: ~/foundry/nginx/conf.d
+        state: directory
+        mode: '0755'
+    - name: Render nginx conf
+      template:
+        src: templates/nginx-default.conf.j2
+        dest: ./foundry/nginx/conf.d/default.conf
+    - name: Create foundry service
+      synchronize:
+        src: foundry.service
+        dest: /etc/systemd/system/foundry.service
+      become: true
+    - name: Set permissions on foundry service
+      file:
+        path: /etc/systemd/system/foundry.service
+        mode: 0755
+        owner: root
+        group: root
+      become: true
+    - name: Enable and restart foundry
+      systemd_service:
+        daemon_reload: true
+        name: foundry
+        enabled: true
+        state: restarted
+      become: true

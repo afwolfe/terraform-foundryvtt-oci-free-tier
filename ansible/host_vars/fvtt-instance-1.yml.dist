@@ -1,0 +1,17 @@
+email: abcdef@email.com
+duckdns_subdomain: abcd # for abcd.duckdns.org
+duckdns_token: ffffffff-ffff-ffff-ffff-ffffffff
+
+foundry_image_uri: "ghcr.io/felddy/foundryvtt"
+foundry_image_tag: "latest"
+domain_name: &domain_name mydomain.duckdns.org
+foundry_env_vars:
+  FOUNDRY_ADMIN_KEY: atropos
+  FOUNDRY_COMPRESS_WEBSOCKET: true
+  FOUNDRY_HOSTNAME: *domain_name
+  FOUNDRY_HOT_RELOAD: false
+  FOUNDRY_MINIFY_STATIC_FILES: true
+  FOUNDRY_PROXY_PORT: 443
+  FOUNDRY_PROXY_SSL: true
+  FOUNDRY_TELEMETRY: false
+  TIMEZONE: US/Eastern

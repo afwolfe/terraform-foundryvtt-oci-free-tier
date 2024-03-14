@@ -1,0 +1,6 @@
+---
+- hosts: oci-instances
+  roles:
+    - role: hifis.unattended_upgrades
+      become: true
+      become_method: sudo

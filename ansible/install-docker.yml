@@ -1,0 +1,9 @@
+---
+- hosts: oci-instances
+  roles:
+    - role: geerlingguy.docker
+      docker_users:
+        - ubuntu
+      become: true
+    - role: nickjj.swapfile
+      become: true

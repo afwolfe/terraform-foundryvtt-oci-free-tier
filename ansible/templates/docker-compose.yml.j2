@@ -1,0 +1,40 @@
+services:
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: foundry nginx
+  foundry:
+    container_name: foundryvtt
+    hostname: foundryvtt
+    image: "{{ foundry_image_uri }}:{{ foundry_image_tag }}"
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ./data
+        target: /data
+    environment:
+      {% for key, value in foundry_env_vars.items() -%}
+      - {{ key }}={{ value | quote }}
+      {% endfor %}
+
+    ports:
+      - "30000:30000/tcp"
+    network_mode: bridge
+  nginx:
+    container_name: nginx
+    image: nginx:1-alpine
+    environment:
+      - DOMAIN_NAME={{ domain_name | quote }}
+    volumes:
+      - ./nginx/var/www:/var/www:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:rw
+      - ./nginx/certs:/certs:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    links:
+      - "foundry"
+    network_mode: bridge
+    ports:
+      - 443:443/tcp
+      - 80:80/tcp
