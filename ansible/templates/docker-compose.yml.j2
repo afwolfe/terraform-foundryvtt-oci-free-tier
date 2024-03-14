@@ -16,7 +16,7 @@ services:
         target: /data
     environment:
       {% for key, value in foundry_env_vars.items() -%}
-      - {{ key }}={{ value | quote }}
+      - {{ key }}={{ value }}
       {% endfor %}
 
     ports:
