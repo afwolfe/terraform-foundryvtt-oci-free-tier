@@ -14,13 +14,19 @@ server {
     # Sets the Max Upload size to 300 MB
     client_max_body_size 300M;
 
-    location /robots.txt {
+    location =/robots.txt {
         alias /var/www/html/robots.txt;
     }
 
     # Proxy Requests to Foundry VTT
     location / {
+        
+        # Only allow GET HEAD POST requests
+        if ($request_method !~ ^(GET|HEAD|POST)$ ) {
+            return 444;
+        }
 
+        
         # Set proxy headers
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
