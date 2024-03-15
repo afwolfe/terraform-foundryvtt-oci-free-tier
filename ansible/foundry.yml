@@ -10,15 +10,6 @@
       template:
         src: templates/docker-compose.yml.j2
         dest: ./foundry/docker-compose.yml
-    - name: Create nginx conf folder if it does not exist
-      file:
-        path: ~/foundry/nginx/conf.d
-        state: directory
-        mode: '0755'
-    - name: Render nginx conf
-      template:
-        src: templates/nginx-default.conf.j2
-        dest: ./foundry/nginx/conf.d/default.conf
     - name: Create foundry service
       synchronize:
         src: foundry.service
