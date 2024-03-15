@@ -65,24 +65,6 @@ variable "instance_state" {
   description = "The state of the OCI instance, can be set to STOPPED to shutdown the instance."
 }
 
-variable "docker_foundry_image_uri" {
-  default = "ghcr.io/felddy/foundryvtt"
-  description = "The Docker repository to use for the Foundry Docker image"
-  type = string
-}
-
-variable "docker_foundry_image_tag" { 
-  default = "latest"
-  description = "The tag to use for the Foundry Docker image"
-  type = string
-}
-
-# https://github.com/felddy/foundryvtt-docker#readme
-variable "docker_foundry_env_vars" {
-  description = "A nested list of strings to configure the Foundry container. See the container documentation for all options."
-  type = list(list(string))
-}
-
 # By default a weekly incremental backup on Mondays at 03:00 AM will be created and retained for 5 weeks
 variable "enable_volume_backups" {
   default = true
