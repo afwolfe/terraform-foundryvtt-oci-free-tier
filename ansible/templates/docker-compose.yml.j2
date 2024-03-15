@@ -6,8 +6,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     command: foundry nginx
   foundry:
-    container_name: foundryvtt
-    hostname: foundryvtt
+    container_name: foundry
+    hostname: foundry
     image: "{{ foundry_image_uri }}:{{ foundry_image_tag }}"
     restart: unless-stopped
     volumes:
@@ -19,22 +19,22 @@ services:
       - {{ key }}={{ value }}
       {% endfor %}
 
-    ports:
-      - "30000:30000/tcp"
-    network_mode: bridge
+    expose:
+      - 30000
   nginx:
     container_name: nginx
-    image: nginx:1-alpine
+    image: ghcr.io/coreruleset/modsecurity-crs:nginx-alpine
     environment:
-      - DOMAIN_NAME={{ domain_name | quote }}
+      - BACKEND=http://foundry:30000
+      - DOMAIN_NAME={{ domain_name }}
+      - SSL_CERT=/etc/letsencrypt/live/{{ domain_name }}/cert.pem
+      - SSL_CERT_KEY=/etc/letsencrypt/live/{{ domain_name }}/privkey.pem
     volumes:
-      - ./nginx/var/www:/var/www:ro
-      - ./nginx/conf.d:/etc/nginx/conf.d:rw
-      - ./nginx/certs:/certs:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
     links:
       - "foundry"
-    network_mode: bridge
     ports:
-      - 443:443/tcp
-      - 80:80/tcp
+      - 443:8443/tcp
+    # FIXME: need root to get certs 
+    user: root
+
