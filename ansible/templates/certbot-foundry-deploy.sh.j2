@@ -1,0 +1,20 @@
+#!/bin/sh
+# Copy renewed certificates for non-root services
+# Based on: https://community.letsencrypt.org/t/how-to-use-certs-in-non-root-services/2690/8
+
+echo "Letsencrypt renewal hook running..."
+echo "RENEWED_DOMAINS=$RENEWED_DOMAINS"
+echo "RENEWED_LINEAGE=$RENEWED_LINEAGE"
+
+if grep --quiet "{{ domain_name }}" <<< "$RENEWED_DOMAINS"; then
+  DEST="/home/ubuntu/foundry/nginx/certs"
+  touch "${DEST}/{{ domain_name }}-key.pem"
+  touch "${DEST}/{{ domain_name }}.pem"
+  cp --backup=t "$RENEWED_LINEAGE/privkey.pem" > "${DEST}/{{ domain_name }}-key.pem"
+  cp --backup=t "$RENEWED_LINEAGE/fullchain.pem" > "${DEST}/{{ domain_name }}.pem"
+  # 101 is default UID/GID for nginx-unprivileged
+  chown 101:101 ${DEST}/*.pem
+  chmod 600 "${DEST}/{{ domain_name }}-key.pem"
+  systemctl restart foundry
+  echo "foundry/nginx key and cert chain updated and restarted"
+fi

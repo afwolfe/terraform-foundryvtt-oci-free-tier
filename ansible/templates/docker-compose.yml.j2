@@ -27,14 +27,12 @@ services:
     environment:
       - BACKEND=http://foundry:30000
       - DOMAIN_NAME={{ domain_name }}
-      - SSL_CERT=/etc/letsencrypt/live/{{ domain_name }}/cert.pem
-      - SSL_CERT_KEY=/etc/letsencrypt/live/{{ domain_name }}/privkey.pem
+      - SSL_CERT=/certs/{{ domain_name }}.pem
+      - SSL_CERT_KEY=/certs/{{ domain_name }}-key.pem
     volumes:
-      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./nginx/certs:/certs:ro
     links:
       - "foundry"
     ports:
       - 443:8443/tcp
-    # FIXME: need root to get certs 
-    user: root
 
