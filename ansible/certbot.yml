@@ -8,7 +8,7 @@
     certbot_certs:
       - domains:
           - "{{ duckdns_subdomain }}.duckdns.org"
-    certbot_create_command: "{{ certbot_script }} certonly --non-interactive --agree-tos --email {{ cert_item.email | default(certbot_admin_email) }} -d {{ cert_item.domains | join(',') }} --preferred-challenges dns --authenticator dns-duckdns --dns-duckdns-token {{ cert_secrets.duckdns_token }} --dns-duckdns-propagation-seconds 60"
+    certbot_create_command: "{{ certbot_script }} certonly --non-interactive --agree-tos --email {{ cert_item.email | default(certbot_admin_email) }} -d {{ cert_item.domains | join(',') }} --preferred-challenges dns --authenticator dns-duckdns --dns-duckdns-token {{ duckdns_token }} --dns-duckdns-propagation-seconds 60"
     certbot_create_if_missing: true
     # defaults file for duckdns
     duckdns_project_root: /etc/duckdns
@@ -16,9 +16,6 @@
     # DuckDNS local machine settings
     duckdns_user: duckdns
     duckdns_group: duckdns
-    # DuckDNS remote settings
-    duckdns_subdomain: "{{ duckdns_subdomain }}"
-    duckdns_token: "{{ duckdns_token }}"
     # DuckDNS immediate update
     duckdns_update_now: yes
 
