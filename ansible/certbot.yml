@@ -28,6 +28,27 @@
       pip:
         name: certbot_dns_duckdns
       become: true
+    - name: Make hook folder
+      file:
+        path: /etc/letsencrypt/renewal-hooks/deploy
+        state: directory
+        owner: root
+        group: root
+      become: true
+    - name: Add certbot deploy hook
+      template:
+        src: templates/certbot-foundry-deploy.sh.j2
+        dest: /etc/letsencrypt/renewal-hooks/deploy/foundry-deploy.sh
+      become: true
+    - name: Make certbot hook executable
+      file:
+        path: /etc/letsencrypt/renewal-hooks/deploy/foundry-deploy.sh
+        mode: 0755
+      become: true
+    - name: Make nginx cert folder
+      file:
+        path: /home/ubuntu/foundry/nginx/certs
+        state: directory
 
   roles:
     - role: rofrantz.duckdns
